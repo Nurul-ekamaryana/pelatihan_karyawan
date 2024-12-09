@@ -3,25 +3,39 @@ import os
 
 FILE_NAME = "Data_Nilai.xlsx"
 
-def simpan_ke_excel(Nama_karyawan, Nama_Kegiatan, Nilai):
+def simpan_ke_excel(Nama_karyawan, Nama_kegiatan, Waktu, Nilai):
     # Jika file Excel tidak ada
     if not os.path.exists(FILE_NAME):
         workbook = openpyxl.Workbook()
         sheet = workbook.active
         sheet.title = 'Nilai'
-        sheet.append(['Nama_karyawan', 'Nama_Kegiatan', 'Nilai'])
+        sheet.append(['Nama_karyawan', 'Nama_Kegiatan', 'Waktu', 'Nilai'])
     else:
         # Jika sudah ada, buka file Excel
         workbook = openpyxl.load_workbook(FILE_NAME)
         sheet = workbook['Nilai']
 
     # Tambahkan data ke Excel
-    sheet.append([Nama_karyawan, Nama_Kegiatan, Nilai])
+    sheet.append([Nama_karyawan, Nama_kegiatan, Waktu, Nilai])
 
     # Simpan perubahan
     workbook.save(FILE_NAME)
+    
+def baca_Jadwal():
+    """Membaca data Jadwal dari file Excel dan mengembalikan daftar Jadwal."""
+    if not os.path.exists("Data_Jadwal.xlsx"):
+        return []  # Jika file tidak ada, kembalikan list kosong
 
-def niali():
+    workbook = openpyxl.load_workbook("Data_Jadwal.xlsx")
+    sheet = workbook["Jadwal"]
+
+    jadwal_list = []
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        jadwal_list.append(row)  # Menyimpan seluruh baris sebagai tuple
+
+    return jadwal_list
+
+def nilai():
     print("\nMAU MELAKUKAN APA DIniali???")
     print("1. Tambah Nilai")
     print("2. Lihat Nilai")
@@ -45,14 +59,32 @@ def niali():
         print("PILIHAN SALAH!!😒😒")
         
 def tambah():
-    print("\nIsi Untuk Menambahkan Nilai Karyawan!!")
-    Nama_karyawan = input("Masukkan Nama Karyawan: ")
-    Nama_Kegiatan = input("Masukkan Nama Kegiatan: ")
-    Nilai = input("Masukkan Nilai: ")
+    print("\nISI UNTUK MENAMBAHKAN JADWAL Jadwal!!")
+
+    # Baca daftar Jadwal dari file Jadwal
+    Jadwal_list = baca_Jadwal()
+
+    # Tampilkan pilihan Jadwal
+    print("Pilih Jadwal:")
+    for i, jadwal in enumerate(Jadwal_list, start=1):
+        print(f"{i}. {jadwal}")  # Menampilkan seluruh data Jadwal
+    print("0. Masukkan Jadwal baru")
+
+    pilihan = int(input("Masukkan pilihan: "))
+    if pilihan == 0:
+        Nama_karyawan = input("Masukkan Nama Karyawan: ")
+    else:
+        Nama_karyawan = Jadwal_list[pilihan - 1][0]  
+        Nama_kegiatan = Jadwal_list[pilihan - 1][1]  # Ambil email dari tuple
+        Waktu = Jadwal_list[pilihan - 1][3]
+
+    # Lanjutkan dengan input lainnya...
+    Nilai = input("Masukkan Nilai Pelatihan: ")
+
     try:
-        simpan_ke_excel(Nama_karyawan, Nama_Kegiatan, Nilai)
-        print("Data berhasil ditambahkan ke Table Data Nilai.")
-        niali()
+        simpan_ke_excel(Nama_karyawan, Nama_kegiatan, Waktu, Nilai)
+        print("Data berhasil ditambahkan ke Nilai.")
+        nilai()
     except Exception as e:
         print(f"Terjadi kesalahan saat menyimpan data: {e}")
 
@@ -73,9 +105,12 @@ def baca():
     
     print("\nDAFTAR KEGIATAN/Nilai")
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        print(f"Nama Karyawan: {row[0]}, \nNama Kegiatan: {row[1]}, \nNilai: {row[2]}\n")
+        print(f"\nNama Karyawan: {row[0]}, ")
+        print(f"Nama Kegiatan: {row[1]},")
+        print(f"Waktu: {row[2]}")
+        print(f"Nilai : {row[3]}\n")
     workbook.close()
-    niali()
+    nilai()
 
 def edit():
     if not os.path.exists(FILE_NAME):
@@ -95,42 +130,52 @@ def edit():
     # Display current entries
     print("\nDAFTAR KEGIATAN/Nilai UNTUK DIEDIT")
     for index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=1):
-        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Nilai: {row[2]}")
+        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Waktu: {row[2]}, Nilai: {row[3]}")
 
     # Ask user for the entry they want to edit
     try:
-        pilihan = int(input("Masukkan nomor Nilai yang ingin diedit: "))
+        pilihan = int(input("Masukkan nomor nilai yang ingin diedit: "))
         if pilihan < 1 or pilihan > sheet.max_row - 1:  # Adjust for header row
-            print("Nomor Nilai tidak valid.")
+            print("Nomor nilai tidak valid.")
             return
 
         # Get the current data
         current_row = sheet[pilihan + 1]  # +1 because we skip the header row
 
         # Display current data
-        print(f"Data saat ini: Nama Karyawan: {current_row[0].value}, Nama Kegiatan: {current_row[1].value}, Nilai: {current_row[2].value}")
+        print(f"Data saat ini: Nama Karyawan: {current_row[0].value}, Nama Kegiatan: {current_row[1].value}, Waktu: {current_row[2].value}, Nilai: {current_row[3].value}")
+ 
+        jadwal_list = baca_Jadwal()
 
-        # Get new data from the user
-        new_nama_karyawan = input("Masukkan Nama Karyawan baru (tekan Enter untuk tetap): ")
-        new_nama_kegiatan = input("Masukkan Nama Kegiatan baru (tekan Enter untuk tetap): ")
-        new_Nilai = input("Masukkan Nilai baru : ")
+        # Tampilkan pilihan nama karyawan
+        print("Pilih nama karyawan:")
+        for i, Jadwal in enumerate(jadwal_list, start=1):
+            print(f"{i}. {Jadwal}")
+        print("0. Masukkan nama karyawan baru")
 
-        # Update the row with new values
-        if new_nama_karyawan:
+        pilihan_nama = int(input("Masukkan pilihan: "))
+        if pilihan_nama == 0:
+            new_nama_karyawan = input("Masukkan Nama Karyawan: ")
+        else:
+            new_nama_karyawan = jadwal_list[pilihan_nama - 1][0]
+            new_nama_kegaitan = jadwal_list[pilihan_nama - 1][1]
+            new_waktu = jadwal_list[pilihan_nama - 1][3]
+            
+            new_nilai = input("Masukkan Nilai baru (tekan Enter untuk tetap): ")
+            # Update the row with new values
             current_row[0].value = new_nama_karyawan
-        if new_nama_kegiatan:
-            current_row[1].value = new_nama_kegiatan
-        if new_Nilai:
-            current_row[2].value = new_Nilai
+            current_row[1].value = new_nama_kegaitan
+            current_row[2].value = new_waktu
+            current_row[3].value = new_nilai
 
-        # Save the changes
-        workbook.save(FILE_NAME)
-        print("Data berhasil diperbarui.")
+            # Save the changes
+            workbook.save(FILE_NAME)
+            print("Data berhasil diperbarui.")
     except Exception as e:
         print(f"Terjadi kesalahan saat mengedit data: {e}")
     finally:
         workbook.close()
-    niali()
+        nilai()
         
 def hapus():
     if not os.path.exists(FILE_NAME):
@@ -152,7 +197,7 @@ def hapus():
     # Tampilkan data untuk membantu pengguna memilih
     print("\nDAFTAR KEGIATAN/NILAI UNTUK DIHAPUS")
     for index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=1):
-        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Nilai: {row[2]}")
+        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Waktu: {row[2]}, Nilai: {row[3]}")
 
     try:
         # Meminta pengguna untuk memilih data yang ingin dihapus
@@ -173,4 +218,4 @@ def hapus():
         print(f"Terjadi kesalahan saat menghapus data: {e}")
     finally:
         workbook.close()
-    niali()
+    nilai()

@@ -15,8 +15,8 @@ def menu_utama():
             from Menu_Jadwal import jadwal
             jadwal()
         elif pilihan == 3:
-            from Menu_Nilai import niali
-            niali()
+            from Menu_Nilai import nilai
+            nilai()
         elif pilihan == 4:
             from Menu_Laporan import laporan
             laporan()
