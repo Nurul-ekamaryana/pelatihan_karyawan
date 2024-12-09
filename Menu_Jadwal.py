@@ -11,35 +11,35 @@ def jadwal():
     print("3. Edit Jadwal")
     print("4. Hapus Jadwal")
     print("5. Kembali")
-    pilihan = input("Pilih Jadwal: ")
+    pilihan = int(input("Pilih Jadwal: "))
     
-    if pilihan == "1":
+    if pilihan == 1:
         tambah()
-    elif pilihan == "2":
+    elif pilihan == 2:
         baca()  
-    elif pilihan == "3":
+    elif pilihan == 3:
         edit()
-    elif pilihan == "4":
+    elif pilihan == 4:
         hapus()
-    elif pilihan == "5":
+    elif pilihan == 5:
         menu_utama()
     else:
         print("PILIHAN SALAH!!😒😒")
 
-def simpan_ke_excel(Nama_karyawan, Nama_Kegiatan, Waktu):
+def simpan_ke_excel(Nama_karyawan, Nama_Kegiatan, WaktuAwal, WaktuAkhir):
     # Jika file Excel tidak ada
     if not os.path.exists(FILE_NAME):
         workbook = openpyxl.Workbook()
         sheet = workbook.active
         sheet.title = 'Jadwal'
-        sheet.append(['Nama_karyawan', 'Nama_Kegiatan', 'Waktu','waktu'])
+        sheet.append(['Nama_karyawan', 'Nama_Kegiatan', 'WaktuAwal','waktuAkhir'])
     else:
         # Jika sudah ada, buka file Excel
         workbook = openpyxl.load_workbook(FILE_NAME)
         sheet = workbook['Jadwal']
 
     # Tambahkan data ke Excel
-    sheet.append([Nama_karyawan, Nama_Kegiatan, Waktu])
+    sheet.append([Nama_karyawan, Nama_Kegiatan, WaktuAwal, WaktuAkhir])
 
     # Simpan perubahan
     workbook.save(FILE_NAME)
@@ -55,7 +55,9 @@ def baca_peserta():
 
     nama_karyawan_list = []
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        nama_karyawan_list.append(row[1])  # Ambil nama karyawan dari kolom kedua
+        nama_karyawan_list.append(row[0])
+         
+        # Ambil nama karyawan dari kolom kedua
 
     return nama_karyawan_list
 
@@ -64,6 +66,7 @@ def tambah():
 
     # Baca daftar nama karyawan dari file peserta
     nama_karyawan_list = baca_peserta()
+
 
     # Tampilkan pilihan nama karyawan
     print("Pilih nama karyawan:")
@@ -79,14 +82,17 @@ def tambah():
 
     # Lanjutkan dengan input lainnya...
     Nama_Kegiatan = input("Masukkan Nama Kegiatan: ")
-    Waktu = input("Masukkan Waktu (format: YYYY-MM-DD HH:MM): ")
+    WaktuAwal = input("Masukkan Waktu Awal (format: YYYY-MM-DD HH:MM): ")
+    WaktuAkhir = input("Masukkan Waktu Akhir (format: YYYY-MM-DD HH:MM): ")
+
 
     try:
-        simpan_ke_excel(Nama_karyawan, Nama_Kegiatan, Waktu)
+        simpan_ke_excel(Nama_karyawan, Nama_Kegiatan, WaktuAwal, WaktuAkhir)
         print("Data berhasil ditambahkan ke jadwal Jadwal.")
         jadwal()
     except Exception as e:
         print(f"Terjadi kesalahan saat menyimpan data: {e}")
+        
 def baca():
     # input lihat jadwal
     
@@ -106,7 +112,11 @@ def baca():
     
     print("\nDAFTAR KEGIATAN/JADWAL")
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        print(f"Nama Karyawan: {row[0]}, \nNama Kegiatan: {row[1]}, \nWaktu: {row[2]}\n")
+        print(f"\nNama Karyawan: {row[0]}, ")
+        print(f"Nama Kegiatan: {row[1]},")
+        print(f"Waktu Awal: {row[2]}")
+        print(f"Waktu Akhir: {row[3]}\n")
+
     workbook.close()
     jadwal()
 
@@ -128,7 +138,7 @@ def edit():
     # Display current entries
     print("\nDAFTAR KEGIATAN/JADWAL UNTUK DIEDIT")
     for index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=1):
-        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Waktu: {row[2]}")
+        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Waktu Awal: {row[2]}, Waktu Akhir: {row[3]}")
 
     # Ask user for the entry they want to edit
     try:
@@ -141,7 +151,7 @@ def edit():
         current_row = sheet[pilihan + 1]  # +1 because we skip the header row
 
         # Display current data
-        print(f"Data saat ini: Nama Karyawan: {current_row[0].value}, Nama Kegiatan: {current_row[1].value}, Waktu: {current_row[2].value}")
+        print(f"Data saat ini: Nama Karyawan: {current_row[0].value}, Nama Kegiatan: {current_row[1].value}, Waktu Awal: {current_row[2].value}, Waktu Akhir: {current_row[3].value}")
  
         nama_karyawan_list = baca_peserta()
 
@@ -158,15 +168,19 @@ def edit():
             new_nama_karyawan = nama_karyawan_list[pilihan_nama - 1]
 
             new_nama_kegiatan = input("Masukkan Nama Kegiatan baru (tekan Enter untuk tetap): ")
-            new_waktu = input("Masukkan Waktu baru (format: YYYY-MM-DD HH:MM, tekan Enter untuk tetap): ")
+            new_waktu_awal = input("Masukkan Waktu Awal baru (format: YYYY-MM-DD HH:MM, tekan Enter untuk tetap): ")
+            new_waktu_akhir = input("Masukkan Waktu Akhir baru (format: YYYY-MM-DD HH:MM, tekan Enter untuk tetap): ")
+
 
             # Update the row with new values
             if new_nama_karyawan:
                 current_row[0].value = new_nama_karyawan
             if new_nama_kegiatan:
                 current_row[1].value = new_nama_kegiatan
-            if new_waktu:
-                current_row[2].value = new_waktu
+            if new_waktu_awal:
+                current_row[2].value = new_waktu_awal
+            if new_waktu_akhir[3]:
+                current_row[3].value = new_waktu_akhir
 
             # Save the changes
             workbook.save(FILE_NAME)
@@ -195,7 +209,7 @@ def hapus():
     # Display current entries
     print("\nDAFTAR KEGIATAN/JADWAL UNTUK DIHAPUS")
     for index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=1):
-        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Waktu: {row[2]}")
+        print(f"{index}. Nama Karyawan: {row[0]}, Nama Kegiatan: {row[1]}, Waktu Awal: {row[2]}, Waktu Akhir: {row[3]}")
 
     # Ask user for the entry they want to delete
     try:

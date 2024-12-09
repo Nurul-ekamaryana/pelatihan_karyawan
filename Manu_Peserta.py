@@ -29,11 +29,11 @@ def peserta():
 
 def tambah():
     print("\nISI UNTUK MENAMBAHKAN NAMA PESERTA")
-    nama_karyawan = input("Masukan Nama Karyawan: ")
+    Nama_Karyawan = input("Masukan Nama Karyawan: ")
     Umur = input("Masukan Umur Karyawan: ")
     telp = input("Masukan telp Karyawan: ")
     try:
-        simpan_ke_excel(Umur, nama_karyawan, telp)
+        simpan_ke_excel(Nama_Karyawan, Umur, telp)
         print("Data berhasil ditambahkan ke menu peserta")
         peserta()
     except Exception as a:
@@ -57,7 +57,9 @@ def baca():
     
     print("\nDAFTAR KEGIATAN/Peserta")
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        print(f"\nUmur:{row[0]}, \nNama Karyawan:{row[1]}, \ntelp:{row[2]}\n")
+        print(f"Nama Karyawan:{row[0]}")
+        print(f"Umur:{row[1]}")
+        print(f"telp:{row[2]}\n")
         workbook.close()
     peserta()
     
@@ -80,7 +82,7 @@ def edit():
     # Display current entries
     print("\nDAFTAR KEGIATAN UNTUK DIEDIT")
     for index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=1):
-        print(f"{index}. Umur: {row[0]}, Nama Karyawan: {row[1]}, telp: {row[2]}")
+        print(f"{index}. Nama Karyawan: {row[0]}, Umur: {row[1]},telp: {row[2]}")
 
     # Ask user for the entry they want to edit
     try:
@@ -93,18 +95,18 @@ def edit():
         current_row = sheet[pilihan + 1]  # +1 because we skip the header row
 
         # Display current data
-        print(f"Data saat ini: Umur: {current_row[0].value}, Nama Karyawan: {current_row[1].value}, telp: {current_row[2].value}")
+        print(f"Data saat ini: Nama Karyawan: {current_row[0].value}, Umur: {current_row[1].value},  telp: {current_row[2].value}")
 
         # Get new data from the user
-        new_Umur = input("Masukkan Umur baru (tekan Enter untuk tetap): ")
         new_nama_karyawan = input("Masukkan Nama Karyawan baru (tekan Enter untuk tetap): ")
-        new_telp = input("Masukkan telp baru : ")
+        new_Umur = input("Masukkan Umur baru (tekan Enter untuk tetap): ")
+        new_telp = input("Masukkan telp baru (tekan Enter untuk tetap): ")
 
         # Update the row with new values
-        if new_Umur:
-            current_row[0].value = new_Umur
         if new_nama_karyawan:
-            current_row[1].value = new_nama_karyawan
+            current_row[0].value = new_nama_karyawan
+        if new_Umur:
+            current_row[1].value = new_Umur
         if new_telp:
             current_row[2].value = new_telp
 
@@ -118,7 +120,6 @@ def edit():
         workbook.close()
    
                                 
-
 def hapus():
     if not os.path.exists(FILE_NAME):
         print("DATA TIDAK DITEMUKAN")
@@ -137,7 +138,7 @@ def hapus():
     # Display current entries
     print("\nDAFTAR KEGIATAN UNTUK DIHAPUS")
     for index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=1):
-        print(f"{index}. Umur: {row[0]}, Nama karyawan: {row[1]}, telp: {row[2]}")
+        print(f"{index}. Nama karyawan: {row[0]}, Umur: {row[1]}, telp: {row[2]}")
 
     # Ask user for the entry they want to delete
     try:
@@ -159,7 +160,7 @@ def hapus():
         workbook.close()
 
 
-def simpan_ke_excel(Umur, Nama_Karyawan, telp):
+def simpan_ke_excel(Nama_Karyawan, Umur, telp, email):
     """
     Menyimpan data pembelian ke file Excel.
     """
@@ -171,11 +172,11 @@ def simpan_ke_excel(Umur, Nama_Karyawan, telp):
         sheet.title = "Peserta"
         
         # Tambahkan header
-        sheet.append(["Umur", "Nama_Karyawan", "Jawaban"])
+        sheet.append(["Nama_Karyawan", "Umur", "Jawaban", "Email"])
     else:
         workbook = openpyxl.load_workbook(FILE_NAME)
         sheet = workbook["Peserta"]
         
     # Tambahkan data pembelian
-    sheet.append([Umur, Nama_Karyawan, telp])
+    sheet.append([Nama_Karyawan, Umur, telp, email])
     workbook.save(FILE_NAME)
