@@ -163,10 +163,14 @@ def edit():
             
             new_nilai = input("Masukkan Nilai baru (tekan Enter untuk tetap): ")
             # Update the row with new values
-            current_row[0].value = new_nama_karyawan
-            current_row[1].value = new_nama_kegaitan
-            current_row[2].value = new_waktu
-            current_row[3].value = new_nilai
+            if new_nama_karyawan:
+                current_row[0].value = new_nama_karyawan
+            if new_nama_kegaitan:
+                current_row[1].value = new_nama_kegaitan
+            if new_waktu:
+                current_row[2].value = new_waktu
+            if new_nilai:
+                current_row[3].value = new_nilai
 
             # Save the changes
             workbook.save(FILE_NAME)

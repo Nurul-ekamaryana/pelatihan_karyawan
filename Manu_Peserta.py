@@ -105,10 +105,15 @@ def edit():
         new_email = input("Masukkan Email baru (tekan Enter untuk tetap): ")
 
         # Update the row with new values
-        current_row[0].value = new_nama_karyawan
-        current_row[1].value = new_Umur
-        current_row[2].value = new_telp
-        current_row[2].value = new_email
+        
+        if new_nama_karyawan:
+            current_row[0].value = new_nama_karyawan
+        if new_Umur:
+            current_row[1].value = new_Umur
+        if new_telp:
+            current_row[2].value = new_telp
+        if new_email:
+            current_row[3].value = new_email
 
         # Save the changes
         workbook.save(FILE_NAME)

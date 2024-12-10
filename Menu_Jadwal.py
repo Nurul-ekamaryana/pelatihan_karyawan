@@ -168,10 +168,14 @@ def edit():
             new_waktu = input("Masukkan Waktu Awal baru (format: YYYY-MM-DD HH:MM, tekan Enter untuk tetap): ")
 
             # Update the row with new values
-            current_row[0].value = new_nama_karyawan
-            current_row[1].value = new_nama_kegiatan
-            current_row[2].value = new_Email
-            current_row[3].value = new_waktu
+            if new_nama_karyawan:
+                current_row[0].value = new_nama_karyawan
+            if new_nama_kegiatan:
+                current_row[1].value = new_nama_kegiatan
+            if new_Email:
+                current_row[2].value = new_Email
+            if new_waktu:
+                current_row[3].value = new_waktu
 
             # Save the changes
             workbook.save(FILE_NAME)
