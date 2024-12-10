@@ -11,17 +11,17 @@ def jadwal():
     print("3. Edit Jadwal")
     print("4. Hapus Jadwal")
     print("5. Kembali")
-    pilihan = int(input("Pilih Jadwal: "))
+    pilihan = input("Pilih Jadwal: ")
     
-    if pilihan == 1:
+    if pilihan == "1":
         tambah()
-    elif pilihan == 2:
+    elif pilihan == "2":
         baca()  
-    elif pilihan == 3:
+    elif pilihan == "3":
         edit()
-    elif pilihan == 4:
+    elif pilihan == "4":
         hapus()
-    elif pilihan == 5:
+    elif pilihan == "5":
         menu_utama()
     else:
         print("PILIHAN SALAH!!😒😒")

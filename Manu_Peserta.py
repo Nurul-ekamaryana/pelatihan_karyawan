@@ -6,11 +6,12 @@ from main import menu_utama
 FILE_NAME = "Data_Peserta.xlsx"
  
 def peserta():
-    print("1. tambah peserta: ")
-    print("2. Tampilkan Peserta: ")
-    print("3. edit peserta: ")
-    print("4. hapus peserta: ")
-    print("5. kembali ke menu utama: ")
+    print("\nMAU MELAKUKAN APA DIPESERTA???")
+    print("1. Tambah Peserta")
+    print("2. Baca Peserta")
+    print("3. Edit Peserta")
+    print("4. Hapus Peserta")
+    print("5. Kembali")
     pilih = input("mau yang mana??")
 
     if pilih =="1":
