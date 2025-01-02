@@ -8,7 +8,7 @@ FILE_NAME = "Data_Peserta.xlsx"
 def peserta():
     print("\nMAU MELAKUKAN APA DIPESERTA???")
     print("1. Tambah Peserta")
-    print("2. Baca Peserta")
+    print("2. Lihat Peserta")
     print("3. Edit Peserta")
     print("4. Hapus Peserta")
     print("5. Kembali")
@@ -56,7 +56,7 @@ def baca():
         print("Belum ada data")
         return
     
-    print("\nDAFTAR KEGIATAN/Peserta")
+    print("\nDAFTAR PESERTA")
     for row in sheet.iter_rows(min_row=2, values_only=True):
         print(f"Nama Karyawan:{row[0]}")
         print(f"Umur:{row[1]}")
@@ -82,7 +82,7 @@ def edit():
         return
 
     # Display current entries
-    print("\nDAFTAR KEGIATAN UNTUK DIEDIT")
+    print("\nDAFTAR PESERTA UNTUK DIEDIT")
     for index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=1):
         print(f"{index}. Nama Karyawan: {row[0]}, Umur: {row[1]},telp: {row[2]}, Email: {row[3]}")
 
@@ -178,7 +178,7 @@ def simpan_ke_excel(Nama_Karyawan, Umur, telp, email):
         sheet.title = "Peserta"
         
         # Tambahkan header
-        sheet.append(["Nama_Karyawan", "Umur", "Jawaban", "Email"])
+        sheet.append(["Nama_Karyawan", "Umur", "Telp", "Email"])
     else:
         workbook = openpyxl.load_workbook(FILE_NAME)
         sheet = workbook["Peserta"]

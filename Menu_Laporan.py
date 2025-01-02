@@ -124,7 +124,7 @@ def lihat_laporan():
 
     print("\n=== Laporan Kehadiran dan Hasil Pelatihan ===")
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        print(f"Nama Karyawan: {row[0]}, Nama Kegitan: {row[1]}, Waktu: {row[2]}, Nilai: {row[3]}, Kehadiran: {row[4]}, Status Kelulusan: {row[5]}")
+        print(f"Nama Karyawan: {row[0]}, Nama Kegitan: {row[1]}, Waktu: {row[2]}, Nilai: {row[3]}, Kehadiran: {row[4]}, Status Kelulusan: {row[5]}\n")
 
     workbook.close()
     laporan()
